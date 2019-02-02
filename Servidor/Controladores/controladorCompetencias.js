@@ -21,7 +21,7 @@ function PostVotar(req, res) {
 }
 function getResultadosCompetencia(req, res) {
   var sql = QueryHandler.CompetenciasIdHandler(req);
-  executeVotoHandler(sql, res);
+  executeResultadosHandler(sql, res);
 }
 
 function executeHandler(sql, res) {
@@ -79,6 +79,35 @@ function executeHandlerPeliculas(sql, res) {
 }
 
 function executeVotoHandler(sql, res) {
+  DB.query(sql[0], function(error, result, fields) {
+    if (error) {
+      errorFormat(error);
+    } else {
+      if (result.length > 0) {
+        DB.query(sql[1], function(errorPeli, resultPeli, fieldsPeli) {
+          if (errorPeli) {
+            errorFormat(errorPeli);
+          } else {
+            if (resultPeli.length > 0) {
+              DB.query(sql[2], function(errorVoto, resultVoto, fieldsVoto) {
+                if (errorVoto) {
+                  errorFormat(errorVoto);
+                } else {
+                  res.send("201");
+                }
+              });
+            }
+          }
+        });
+      } else {
+        // res.sendStatus(404);
+        res.send("404");
+      }
+    }
+  });
+}
+
+function executeResultadosHandler(sql, res) {
   DB.query(sql, function(error, result, fields) {
     if (error) {
       errorFormat(error);

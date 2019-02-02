@@ -189,7 +189,3 @@ module.exports = {
   PeliById:PeliById,
   ResultadoCompetenciaHandler:ResultadoCompetenciaHandler
 };
-/*
-{ idPelicula: '312' }
-{ id: '1' }
-*/
