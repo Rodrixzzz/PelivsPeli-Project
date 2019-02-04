@@ -1,5 +1,6 @@
-var selectPrincipio = "Select * from competencia ";
-var selectPeliId= "Select * from pelicula where id =  "
+var selectPrincipioComp = "Select * from competencia ";
+var selectPrincipio = "Select * from ";
+var selectPeliId = "Select * from pelicula where id =  ";
 var selectCompAll =
   "Select comp.id, comp.nombre, gen.nombre as genero_nombre,act.nombre as actor_nombre,dir.nombre as director_nombre ";
 var fromCompAll = "from competencia comp, genero gen, actor act, director dir";
@@ -16,18 +17,32 @@ var fromCompPeli = " from pelicula peli, competencia comp";
 var fromVoto = " from pelicula peli, voto vot";
 var GrouplimitorderVoto = " group by peli.titulo ORDER BY votos Desc LIMIT 3";
 var limitOrderCompPeli = "ORDER BY RAND() LIMIT 2";
-var insertVoto = "Insert into voto (competencia_id,pelicula_id) VALUES("
+var insertVoto = "Insert into voto (competencia_id,pelicula_id) VALUES(";
+var InsertCompetencia =
+  "Insert into competencia (nombre, genero_id, actor_id, director_id) VALUES(";
+var DeleteVoto = "Delete from voto where competencia_id = ";
+var DeleteCompetencia = "Delete from competencia where id = ";
 
-//La generica maneja tipo de orden,cantidad y numero de pagina que siempre vienen informados.
 function defaultHandler(req) {
-  var sql = selectPrincipio;
+  var sql;
+  var path = req.url;
+  if (path == "/competencias" || path == "/generos") {
+    path = path.slice(1, path.length - 1);
+  } else {
+    path = path.slice(1, path.length - 2);
+  }
+  sql = selectPrincipio + path;
   return sql;
 }
 function CompetenciasIdHandler(req) {
-  var sql = selectPrincipio + " where id = " + req.params.id;
+  var sql = selectPrincipioComp + " where id = " + req.params.id;
   return sql;
 }
-
+function competenciasPorNombre(req) {
+  var sql = selectPrincipioComp +"where nombre=" +'"'+req.body.nombre+'"';
+  return sql;
+}
+//#region ComeptenciasPorCampos
 function ComeptenciasPorCamposHandler(result) {
   var sql;
   switch (true) {
@@ -97,7 +112,8 @@ function ComeptenciasPorCamposHandler(result) {
   }
   return sql;
 }
-
+//#endregion
+//#region PeliculasPorCampos
 function PeliculasPorCamposHandler(result) {
   var sql;
   switch (true) {
@@ -158,6 +174,7 @@ function PeliculasPorCamposHandler(result) {
   }
   return sql;
 }
+//#endregion
 function PeliById(req) {
   var sql = selectPeliId + req.body.idPelicula;
   return sql;
@@ -170,14 +187,93 @@ function InsertVotoHandler(req) {
   return sql;
 }
 function ResultadoCompetenciaHandler(result) {
-  var sql = SelectCompPeli + 
-  " ,count(*) as votos" + 
-  fromVoto + 
-  " where vot.competencia_id = " +
-  result[0].id + 
-  " and peli.id = vot.pelicula_id " +
-  GrouplimitorderVoto;
-  console.log(sql);
+  var sql =
+    SelectCompPeli +
+    " ,count(*) as votos" +
+    fromVoto +
+    " where vot.competencia_id = " +
+    result[0].id +
+    " and peli.id = vot.pelicula_id " +
+    GrouplimitorderVoto;
+  return sql;
+}
+//#region InsertCompetencias
+function InsertCompetenciasHandler(req) {
+  var sql = [];
+  sql[0] = competenciasPorNombre(req);
+  switch (true) {
+    case req.body.genero != 0 && req.body.director != 0 && req.body.actor != 0:
+      sql[1] =
+        InsertCompetencia +
+        '"'+
+        req.body.nombre +
+        '"'+
+        "," +
+        req.body.genero +
+        "," +
+        req.body.actor +
+        "," +
+        req.body.director +
+        ")";
+      break;
+    case req.body.genero != 0 && req.body.director == 0 && req.body.actor == 0:
+      sql[1] =
+        InsertCompetencia +
+        '"'+
+        req.body.nombre +
+        '"'+
+        "," +
+        req.body.genero +
+        "," +
+        null +
+        "," +
+        null +
+        ")";
+      break;
+    case req.body.genero == 0 && req.body.director != 0 && req.body.actor == 0:
+      sql[1] =
+        InsertCompetencia +
+        '"'+
+        req.body.nombre +
+        '"'+
+        "," +
+        null +
+        "," +
+        null +
+        "," +
+        req.body.director +
+        ")";
+      break;
+    case req.body.genero == 0 && req.body.director == 0 && req.body.actor != 0:
+      sql[1] =
+        InsertCompetencia +
+        '"'+
+        req.body.nombre +
+        '"'+
+        "," +
+        null +
+        "," +
+        req.body.actor +
+        "," +
+        null +
+        ")";
+      break;
+  }
+  return sql;
+}
+//#endregion
+function DeleteVotoHandler(req) {
+  var sql = [];
+  sql[0] = CompetenciasIdHandler(req);
+  sql[1] = DeleteVoto + req.params.id;
+  return sql;
+}
+
+function DeleteCompetenciaHandler(req) {
+  var sql = [];
+  sql[0] = CompetenciasIdHandler(req);
+  sql[1] = DeleteVoto + req.params.id;
+  sql[2] = DeleteCompetencia + req.params.id;
   return sql;
 }
 module.exports = {
@@ -185,7 +281,10 @@ module.exports = {
   CompetenciasIdHandler: CompetenciasIdHandler,
   ComeptenciasPorCamposHandler: ComeptenciasPorCamposHandler,
   PeliculasPorCamposHandler: PeliculasPorCamposHandler,
-  InsertVotoHandler:InsertVotoHandler,
-  PeliById:PeliById,
-  ResultadoCompetenciaHandler:ResultadoCompetenciaHandler
+  InsertVotoHandler: InsertVotoHandler,
+  PeliById: PeliById,
+  ResultadoCompetenciaHandler: ResultadoCompetenciaHandler,
+  DeleteVotoHandler: DeleteVotoHandler,
+  DeleteCompetenciaHandler: DeleteCompetenciaHandler,
+  InsertCompetenciasHandler:InsertCompetenciasHandler
 };

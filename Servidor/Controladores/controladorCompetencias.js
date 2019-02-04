@@ -23,7 +23,18 @@ function getResultadosCompetencia(req, res) {
   var sql = QueryHandler.CompetenciasIdHandler(req);
   executeResultadosHandler(sql, res);
 }
-
+function PostCompetencia(req, res) {
+  var sql = QueryHandler.InsertCompetenciasHandler(req);
+  executeInsertCompetenciaHandler(sql, res);
+}
+function DeleteVotar(req, res) {
+  var sql = QueryHandler.DeleteVotoHandler(req);
+  executeDeleteCompetenciaVotoHandler(sql, res);
+}
+function DeleteCompetencia(req, res) {
+  var sql = QueryHandler.DeleteCompetenciaHandler(req);
+  executeDeleteCompetenciaHandler(sql, res);
+}
 function executeHandler(sql, res) {
   DB.query(sql, function(error, result, fields) {
     if (error) {
@@ -44,11 +55,10 @@ function executeHandlerCompetencias(sql, res) {
           if (errorCamp) {
             errorFormat(errorCamp);
           }
-          res.send(JSON.stringify(resultCamp));
+          res.send(JSON.stringify(resultCamp[0]));
         });
       } else {
-        // res.sendStatus(404);
-        res.send("404");
+        res.status(404).send("No existe la competencia");
       }
     }
   });
@@ -71,8 +81,7 @@ function executeHandlerPeliculas(sql, res) {
           res.send(JSON.stringify(Response));
         });
       } else {
-        // res.sendStatus(404);
-        res.send("404");
+        res.status(404).send("No existe la competencia");
       }
     }
   });
@@ -93,15 +102,16 @@ function executeVotoHandler(sql, res) {
                 if (errorVoto) {
                   errorFormat(errorVoto);
                 } else {
-                  res.send("201");
+                  res.status(201).send("OK");
                 }
               });
+            } else {
+              res.status(404).send("No existe la pelicula");
             }
           }
         });
       } else {
-        // res.sendStatus(404);
-        res.send("404");
+        res.status(404).send("No existe la competencia");
       }
     }
   });
@@ -125,8 +135,72 @@ function executeResultadosHandler(sql, res) {
           res.send(JSON.stringify(Response));
         });
       } else {
-        // res.sendStatus(404);
-        res.send("404");
+        res.status(404).send("No existe la competencia");
+      }
+    }
+  });
+}
+
+function executeInsertCompetenciaHandler(sql, res) {
+  DB.query(sql[0], function(error, result, fields) {
+    if (error) {
+      errorFormat(error);
+    } else {
+      if (result.length == 0) {
+        DB.query(sql[1], function(errorComp, resultComp, fieldsComp) {
+          if (errorComp) {
+            errorFormat(errorComp);
+          } else {
+            res.status(201).send("OK");
+          }
+        });
+      } else {
+        res.status(422).send("Ya existe una competencia con ese nombre");
+      }
+    }
+  });
+}
+
+function executeDeleteCompetenciaVotoHandler(sql, res) {
+  DB.query(sql[0], function(error, result, fields) {
+    if (error) {
+      errorFormat(error);
+    } else {
+      if (result.length > 0) {
+        DB.query(sql[1], function(errorVoto, resultVoto, fieldsVoto) {
+          if (errorVoto) {
+            errorFormat(errorVoto);
+          } else {
+            res.status(200).send("OK");
+          }
+        });
+      } else {
+        res.status(404).send("No existe la competencia");
+      }
+    }
+  });
+}
+function executeDeleteCompetenciaHandler(sql, res) {
+  DB.query(sql[0], function(error, result, fields) {
+    if (error) {
+      errorFormat(error);
+    } else {
+      if (result.length > 0) {
+        DB.query(sql[1], function(errorVoto, resultVoto, fieldsVoto) {
+          if (errorVoto) {
+            errorFormat(errorVoto);
+          } else {
+            DB.query(sql[2], function(errorComp, resultComp, fieldsComp) {
+              if (errorComp) {
+                errorFormat(errorComp);
+              } else {
+                res.status(200).send("OK");
+              }
+            });
+          }
+        });
+      } else {
+        res.status(404).send("No existe la competencia");
       }
     }
   });
@@ -144,5 +218,8 @@ module.exports = {
   getCompetenciasById: getCompetenciasById,
   getPeliculasCompetencia: getPeliculasCompetencia,
   PostVotar: PostVotar,
-  getResultadosCompetencia: getResultadosCompetencia
+  getResultadosCompetencia: getResultadosCompetencia,
+  PostCompetencia: PostCompetencia,
+  DeleteVotar: DeleteVotar,
+  DeleteCompetencia: DeleteCompetencia
 };

@@ -1,6 +1,6 @@
 var DB = require("../lib/conexionbd");
 var QueryHandler = require("../Lib/QueryHandler");
-function getGeneros(req, res) {
+function getActores(req, res) {
     var sql = QueryHandler.defaultHandler(req);
     executeHandler(sql, res);
   }
@@ -22,6 +22,6 @@ function getGeneros(req, res) {
   }
   
   module.exports = {
-    getGeneros: getGeneros
+    getActores: getActores
   };
   
