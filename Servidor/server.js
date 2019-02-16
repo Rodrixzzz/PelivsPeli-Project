@@ -31,6 +31,8 @@ app.get("/competencias/:id", Competencias.getCompetenciasById);
 //Post
 app.post("/competencias/",Competencias.PostCompetencia);
 app.post("/competencias/:id/voto",Competencias.PostVotar);
+//Put
+app.put("/competencias/:id",Competencias.EditCompetencia);
 //Delete
 app.delete("/competencias/:id/votos",Competencias.DeleteVotar);
 app.delete("/competencias/:id",Competencias.DeleteCompetencia);

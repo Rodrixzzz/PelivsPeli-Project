@@ -35,6 +35,10 @@ function DeleteCompetencia(req, res) {
   var sql = QueryHandler.DeleteCompetenciaHandler(req);
   executeDeleteCompetenciaHandler(sql, res);
 }
+function EditCompetencia(req,res) {
+  var sql = QueryHandler.EditCompetenciasHandler(req);
+  executeEditCompetenciaHandler(sql,res);
+}
 function executeHandler(sql, res) {
   DB.query(sql, function(error, result, fields) {
     if (error) {
@@ -205,7 +209,25 @@ function executeDeleteCompetenciaHandler(sql, res) {
     }
   });
 }
-
+function executeEditCompetenciaHandler(sql, res) {
+  DB.query(sql[0], function(error, result, fields) {
+    if (error) {
+      errorFormat(error);
+    } else {
+      if (result.length > 0) {
+        DB.query(sql[1], function(errorComp, errorComp, errorComp) {
+          if (errorComp) {
+            errorFormat(errorComp);
+          } else {
+            res.status(200).send("OK");
+          }
+        });
+      } else {
+        res.status(404).send("No existe la competencia");
+      }
+    }
+  });
+}
 function errorFormat(error) {
   console.log("Error SQL");
   console.log(error.code);
@@ -221,5 +243,6 @@ module.exports = {
   getResultadosCompetencia: getResultadosCompetencia,
   PostCompetencia: PostCompetencia,
   DeleteVotar: DeleteVotar,
-  DeleteCompetencia: DeleteCompetencia
+  DeleteCompetencia: DeleteCompetencia,
+  EditCompetencia:EditCompetencia
 };

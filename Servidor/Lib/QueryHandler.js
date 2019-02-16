@@ -22,6 +22,7 @@ var InsertCompetencia =
   "Insert into competencia (nombre, genero_id, actor_id, director_id) VALUES(";
 var DeleteVoto = "Delete from voto where competencia_id = ";
 var DeleteCompetencia = "Delete from competencia where id = ";
+var EditCompentencia = "Update competencia set nombre ="
 
 function defaultHandler(req) {
   var sql;
@@ -73,6 +74,61 @@ function ComeptenciasPorCamposHandler(result) {
         result[0].id +
         " and gen.id = comp.genero_id";
       break;
+      case result[0].genero_id != undefined &&
+      result[0].actor_id != undefined &&
+      result[0].director_id == undefined:
+      sql =
+        selectCompVar +
+        ", gen.nombre" +
+        generoNombre +
+        " act.nombre" +
+        actorNombre +
+        espacio +
+        directorNombre +
+        fromCompVar +
+        " ,genero gen,actor act " +
+        " where comp.id = " +
+        result[0].id +
+        " and gen.id = comp.genero_id" +
+        " and act.id = comp.actor_id";
+      break;
+      case result[0].genero_id != undefined &&
+      result[0].actor_id == undefined &&
+      result[0].director_id != undefined:
+      sql =
+        selectCompVar +
+        ", gen.nombre" +
+        generoNombre +
+        espacio +
+        actorNombre +
+        " dir.nombre " + 
+        directorNombre +
+        fromCompVar +
+        " ,genero gen,director dir " +
+        " where comp.id = " +
+        result[0].id +
+        " and gen.id = comp.genero_id" +
+        " and dir.id = comp.director_id";
+      break;
+      case result[0].genero_id == undefined &&
+      result[0].actor_id != undefined &&
+      result[0].director_id != undefined:
+      sql =
+        selectCompVar +
+        ", " +
+        espacio +
+        generoNombre +
+        " act.nombre" +
+        actorNombre +
+        " dir.nombre " + 
+        directorNombre +
+        fromCompVar +
+        " ,actor act,director dir " +
+        " where comp.id = " +
+        result[0].id +
+        " and act.id = comp.actor_id"+
+        " and dir.id = comp.director_id";;
+      break;
     case result[0].genero_id == undefined &&
       result[0].actor_id != undefined &&
       result[0].director_id == undefined:
@@ -108,6 +164,25 @@ function ComeptenciasPorCamposHandler(result) {
         " where comp.id = " +
         result[0].id +
         " and dir.id = comp.director_id";
+      break;
+      case result[0].genero_id != undefined &&
+      result[0].actor_id != undefined &&
+      result[0].director_id != undefined:
+      sql =
+        selectCompVar +
+        ", gen.nombre" +
+        generoNombre +
+        " act.nombre" +
+        actorNombre +
+        " dir.nombre " + 
+        directorNombre +
+        fromCompVar +
+        " ,genero gen,director dir,actor act " +
+        " where comp.id = " +
+        result[0].id +
+        " and gen.id = comp.genero_id" +
+        " and dir.id = comp.director_id"+
+        " and act.id = comp.actor_id";
       break;
   }
   return sql;
@@ -166,6 +241,50 @@ function PeliculasPorCamposHandler(result) {
         fromCompPeli +
         " where comp.id = " +
         result[0].id +
+        " and peli.id IN (select pelicula_id from director_pelicula where director_id = " +
+        result[0].director_id +
+        " ) " +
+        limitOrderCompPeli;
+      break;
+      case result[0].genero_id != undefined &&
+      result[0].actor_id != undefined &&
+      result[0].director_id == undefined:
+      sql =
+        SelectCompPeli +
+        fromCompPeli +
+        " where comp.id = " +
+        result[0].id +
+        " and peli.genero_id = comp.genero_id" +
+        " and peli.id IN (Select pelicula_id from actor_pelicula where actor_id = " +
+        result[0].actor_id +
+        " ) " +
+        limitOrderCompPeli;
+      break;
+      case result[0].genero_id != undefined &&
+      result[0].actor_id == undefined &&
+      result[0].director_id != undefined:
+      sql =
+        SelectCompPeli +
+        fromCompPeli +
+        " where comp.id = " +
+        result[0].id +
+        " and peli.genero_id = comp.genero_id" +
+        " and peli.id IN (select pelicula_id from director_pelicula where director_id = " +
+        result[0].director_id +
+        " ) " +
+        limitOrderCompPeli;
+      break;
+      case result[0].genero_id == undefined &&
+      result[0].actor_id != undefined &&
+      result[0].director_id != undefined:
+      sql =
+        SelectCompPeli +
+        fromCompPeli +
+        " where comp.id = " +
+        result[0].id +
+        " and peli.id IN (Select pelicula_id from actor_pelicula where actor_id = " +
+        result[0].actor_id +
+        " ) " +
         " and peli.id IN (select pelicula_id from director_pelicula where director_id = " +
         result[0].director_id +
         " ) " +
@@ -258,7 +377,50 @@ function InsertCompetenciasHandler(req) {
         null +
         ")";
       break;
+      case req.body.genero != 0 && req.body.director == 0 && req.body.actor != 0:
+      sql[1] =
+      InsertCompetencia +
+      '"'+
+      req.body.nombre +
+      '"'+
+      "," +
+      req.body.genero +
+      "," +
+      req.body.actor +
+      "," +
+      null +
+      ")";
+    break;
+    case req.body.genero != 0 && req.body.director != 0 && req.body.actor == 0:
+      sql[1] =
+      InsertCompetencia +
+      '"'+
+      req.body.nombre +
+      '"'+
+      "," +
+      req.body.genero +
+      "," +
+      null +
+      "," +
+      req.body.director +
+      ")";
+    break;
+    case req.body.genero == 0 && req.body.director != 0 && req.body.actor != 0:
+      sql[1] =
+        InsertCompetencia +
+        '"'+
+        req.body.nombre +
+        '"'+
+        "," +
+        null +
+        "," +
+        req.body.actor +
+        "," +
+        req.body.director +
+        ")";
+      break;
   }
+  console.log(sql);
   return sql;
 }
 //#endregion
@@ -276,6 +438,12 @@ function DeleteCompetenciaHandler(req) {
   sql[2] = DeleteCompetencia + req.params.id;
   return sql;
 }
+function EditCompetenciasHandler(req) {
+  var sql = [];
+  sql[0] = CompetenciasIdHandler(req);
+  sql[1] = EditCompentencia + '"' +req.body.nombre + '"' + " where id = " + req.params.id;
+  return sql;
+}
 module.exports = {
   defaultHandler: defaultHandler,
   CompetenciasIdHandler: CompetenciasIdHandler,
@@ -286,5 +454,6 @@ module.exports = {
   ResultadoCompetenciaHandler: ResultadoCompetenciaHandler,
   DeleteVotoHandler: DeleteVotoHandler,
   DeleteCompetenciaHandler: DeleteCompetenciaHandler,
-  InsertCompetenciasHandler:InsertCompetenciasHandler
+  InsertCompetenciasHandler:InsertCompetenciasHandler,
+  EditCompetenciasHandler:EditCompetenciasHandler
 };
