@@ -14,14 +14,14 @@ app.use(
     extended: true
   })
 );
-//#region Otros 
+//#region Otros
 //GET
 app.get("/actores", actores.getActores);
 app.get("/generos", generos.getGeneros);
 app.get("/directores", directores.getDirectores);
 //#endregion
 
-//#region Competecias 
+//#region Competecias
 //Manejo request de Competencias
 //GET
 app.get("/competencias", Competencias.getCompetencias);
@@ -29,13 +29,13 @@ app.get("/competencias/:id/peliculas", Competencias.getPeliculasCompetencia);
 app.get("/competencias/:id/resultados", Competencias.getResultadosCompetencia);
 app.get("/competencias/:id", Competencias.getCompetenciasById);
 //Post
-app.post("/competencias/",Competencias.PostCompetencia);
-app.post("/competencias/:id/voto",Competencias.PostVotar);
+app.post("/competencias/", Competencias.PostCompetencia);
+app.post("/competencias/:id/voto", Competencias.PostVotar);
 //Put
-app.put("/competencias/:id",Competencias.EditCompetencia);
+app.put("/competencias/:id", Competencias.EditCompetencia);
 //Delete
-app.delete("/competencias/:id/votos",Competencias.DeleteVotar);
-app.delete("/competencias/:id",Competencias.DeleteCompetencia);
+app.delete("/competencias/:id/votos", Competencias.DeleteVotar);
+app.delete("/competencias/:id", Competencias.DeleteCompetencia);
 //#endregion
 
 //seteamos el puerto en el cual va a escuchar los pedidos la aplicación

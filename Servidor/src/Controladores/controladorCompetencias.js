@@ -35,9 +35,9 @@ function DeleteCompetencia(req, res) {
   var sql = QueryHandler.DeleteCompetenciaHandler(req);
   executeDeleteCompetenciaHandler(sql, res);
 }
-function EditCompetencia(req,res) {
+function EditCompetencia(req, res) {
   var sql = QueryHandler.EditCompetenciasHandler(req);
-  executeEditCompetenciaHandler(sql,res);
+  executeEditCompetenciaHandler(sql, res);
 }
 function executeHandler(sql, res) {
   DB.query(sql, function(error, result, fields) {
@@ -106,7 +106,7 @@ function executeVotoHandler(sql, res) {
                 if (errorVoto) {
                   errorFormat(errorVoto);
                 } else {
-                  res.status(201).send("OK");
+                  res.send("201");
                 }
               });
             } else {
@@ -244,5 +244,5 @@ module.exports = {
   PostCompetencia: PostCompetencia,
   DeleteVotar: DeleteVotar,
   DeleteCompetencia: DeleteCompetencia,
-  EditCompetencia:EditCompetencia
+  EditCompetencia: EditCompetencia
 };

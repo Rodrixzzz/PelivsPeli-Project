@@ -22,7 +22,7 @@ var InsertCompetencia =
   "Insert into competencia (nombre, genero_id, actor_id, director_id) VALUES(";
 var DeleteVoto = "Delete from voto where competencia_id = ";
 var DeleteCompetencia = "Delete from competencia where id = ";
-var EditCompentencia = "Update competencia set nombre ="
+var EditCompentencia = "Update competencia set nombre =";
 
 function defaultHandler(req) {
   var sql;
@@ -40,7 +40,7 @@ function CompetenciasIdHandler(req) {
   return sql;
 }
 function competenciasPorNombre(req) {
-  var sql = selectPrincipioComp +"where nombre=" +'"'+req.body.nombre+'"';
+  var sql = selectPrincipioComp + "where nombre=" + '"' + req.body.nombre + '"';
   return sql;
 }
 //#region ComeptenciasPorCampos
@@ -74,7 +74,7 @@ function ComeptenciasPorCamposHandler(result) {
         result[0].id +
         " and gen.id = comp.genero_id";
       break;
-      case result[0].genero_id != undefined &&
+    case result[0].genero_id != undefined &&
       result[0].actor_id != undefined &&
       result[0].director_id == undefined:
       sql =
@@ -92,7 +92,7 @@ function ComeptenciasPorCamposHandler(result) {
         " and gen.id = comp.genero_id" +
         " and act.id = comp.actor_id";
       break;
-      case result[0].genero_id != undefined &&
+    case result[0].genero_id != undefined &&
       result[0].actor_id == undefined &&
       result[0].director_id != undefined:
       sql =
@@ -101,7 +101,7 @@ function ComeptenciasPorCamposHandler(result) {
         generoNombre +
         espacio +
         actorNombre +
-        " dir.nombre " + 
+        " dir.nombre " +
         directorNombre +
         fromCompVar +
         " ,genero gen,director dir " +
@@ -110,7 +110,7 @@ function ComeptenciasPorCamposHandler(result) {
         " and gen.id = comp.genero_id" +
         " and dir.id = comp.director_id";
       break;
-      case result[0].genero_id == undefined &&
+    case result[0].genero_id == undefined &&
       result[0].actor_id != undefined &&
       result[0].director_id != undefined:
       sql =
@@ -120,14 +120,14 @@ function ComeptenciasPorCamposHandler(result) {
         generoNombre +
         " act.nombre" +
         actorNombre +
-        " dir.nombre " + 
+        " dir.nombre " +
         directorNombre +
         fromCompVar +
         " ,actor act,director dir " +
         " where comp.id = " +
         result[0].id +
-        " and act.id = comp.actor_id"+
-        " and dir.id = comp.director_id";;
+        " and act.id = comp.actor_id" +
+        " and dir.id = comp.director_id";
       break;
     case result[0].genero_id == undefined &&
       result[0].actor_id != undefined &&
@@ -165,7 +165,7 @@ function ComeptenciasPorCamposHandler(result) {
         result[0].id +
         " and dir.id = comp.director_id";
       break;
-      case result[0].genero_id != undefined &&
+    case result[0].genero_id != undefined &&
       result[0].actor_id != undefined &&
       result[0].director_id != undefined:
       sql =
@@ -174,14 +174,14 @@ function ComeptenciasPorCamposHandler(result) {
         generoNombre +
         " act.nombre" +
         actorNombre +
-        " dir.nombre " + 
+        " dir.nombre " +
         directorNombre +
         fromCompVar +
         " ,genero gen,director dir,actor act " +
         " where comp.id = " +
         result[0].id +
         " and gen.id = comp.genero_id" +
-        " and dir.id = comp.director_id"+
+        " and dir.id = comp.director_id" +
         " and act.id = comp.actor_id";
       break;
   }
@@ -246,7 +246,7 @@ function PeliculasPorCamposHandler(result) {
         " ) " +
         limitOrderCompPeli;
       break;
-      case result[0].genero_id != undefined &&
+    case result[0].genero_id != undefined &&
       result[0].actor_id != undefined &&
       result[0].director_id == undefined:
       sql =
@@ -260,7 +260,7 @@ function PeliculasPorCamposHandler(result) {
         " ) " +
         limitOrderCompPeli;
       break;
-      case result[0].genero_id != undefined &&
+    case result[0].genero_id != undefined &&
       result[0].actor_id == undefined &&
       result[0].director_id != undefined:
       sql =
@@ -274,7 +274,7 @@ function PeliculasPorCamposHandler(result) {
         " ) " +
         limitOrderCompPeli;
       break;
-      case result[0].genero_id == undefined &&
+    case result[0].genero_id == undefined &&
       result[0].actor_id != undefined &&
       result[0].director_id != undefined:
       sql =
@@ -324,9 +324,9 @@ function InsertCompetenciasHandler(req) {
     case req.body.genero != 0 && req.body.director != 0 && req.body.actor != 0:
       sql[1] =
         InsertCompetencia +
-        '"'+
+        '"' +
         req.body.nombre +
-        '"'+
+        '"' +
         "," +
         req.body.genero +
         "," +
@@ -338,9 +338,9 @@ function InsertCompetenciasHandler(req) {
     case req.body.genero != 0 && req.body.director == 0 && req.body.actor == 0:
       sql[1] =
         InsertCompetencia +
-        '"'+
+        '"' +
         req.body.nombre +
-        '"'+
+        '"' +
         "," +
         req.body.genero +
         "," +
@@ -352,9 +352,9 @@ function InsertCompetenciasHandler(req) {
     case req.body.genero == 0 && req.body.director != 0 && req.body.actor == 0:
       sql[1] =
         InsertCompetencia +
-        '"'+
+        '"' +
         req.body.nombre +
-        '"'+
+        '"' +
         "," +
         null +
         "," +
@@ -366,9 +366,9 @@ function InsertCompetenciasHandler(req) {
     case req.body.genero == 0 && req.body.director == 0 && req.body.actor != 0:
       sql[1] =
         InsertCompetencia +
-        '"'+
+        '"' +
         req.body.nombre +
-        '"'+
+        '"' +
         "," +
         null +
         "," +
@@ -377,40 +377,40 @@ function InsertCompetenciasHandler(req) {
         null +
         ")";
       break;
-      case req.body.genero != 0 && req.body.director == 0 && req.body.actor != 0:
+    case req.body.genero != 0 && req.body.director == 0 && req.body.actor != 0:
       sql[1] =
-      InsertCompetencia +
-      '"'+
-      req.body.nombre +
-      '"'+
-      "," +
-      req.body.genero +
-      "," +
-      req.body.actor +
-      "," +
-      null +
-      ")";
-    break;
+        InsertCompetencia +
+        '"' +
+        req.body.nombre +
+        '"' +
+        "," +
+        req.body.genero +
+        "," +
+        req.body.actor +
+        "," +
+        null +
+        ")";
+      break;
     case req.body.genero != 0 && req.body.director != 0 && req.body.actor == 0:
       sql[1] =
-      InsertCompetencia +
-      '"'+
-      req.body.nombre +
-      '"'+
-      "," +
-      req.body.genero +
-      "," +
-      null +
-      "," +
-      req.body.director +
-      ")";
-    break;
+        InsertCompetencia +
+        '"' +
+        req.body.nombre +
+        '"' +
+        "," +
+        req.body.genero +
+        "," +
+        null +
+        "," +
+        req.body.director +
+        ")";
+      break;
     case req.body.genero == 0 && req.body.director != 0 && req.body.actor != 0:
       sql[1] =
         InsertCompetencia +
-        '"'+
+        '"' +
         req.body.nombre +
-        '"'+
+        '"' +
         "," +
         null +
         "," +
@@ -420,7 +420,6 @@ function InsertCompetenciasHandler(req) {
         ")";
       break;
   }
-  console.log(sql);
   return sql;
 }
 //#endregion
@@ -441,7 +440,13 @@ function DeleteCompetenciaHandler(req) {
 function EditCompetenciasHandler(req) {
   var sql = [];
   sql[0] = CompetenciasIdHandler(req);
-  sql[1] = EditCompentencia + '"' +req.body.nombre + '"' + " where id = " + req.params.id;
+  sql[1] =
+    EditCompentencia +
+    '"' +
+    req.body.nombre +
+    '"' +
+    " where id = " +
+    req.params.id;
   return sql;
 }
 module.exports = {
@@ -454,6 +459,6 @@ module.exports = {
   ResultadoCompetenciaHandler: ResultadoCompetenciaHandler,
   DeleteVotoHandler: DeleteVotoHandler,
   DeleteCompetenciaHandler: DeleteCompetenciaHandler,
-  InsertCompetenciasHandler:InsertCompetenciasHandler,
-  EditCompetenciasHandler:EditCompetenciasHandler
+  InsertCompetenciasHandler: InsertCompetenciasHandler,
+  EditCompetenciasHandler: EditCompetenciasHandler
 };
