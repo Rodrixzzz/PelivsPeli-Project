@@ -5,7 +5,7 @@ var app = express();
 var peliculas = require("./Controladores/controladorPeliculas");
 var generos = require("./Controladores/controladorGeneros");
 var actores = require("./Controladores/controladorActores");
-var directores = require("./Controladores/controladorDirectores");
+var directores = require("./Controladores/ControladorDirectores");
 var Competencias = require("./Controladores/controladorCompetencias");
 app.use(cors());
 

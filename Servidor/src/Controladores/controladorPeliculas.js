@@ -1,6 +1,6 @@
-var DB = require("../lib/conexionbd");
+var DB = require("../Lib/conexionbd");
 var QueryHandler = require("../Lib/QueryHandler");
-// Funcion para devolver todas las peliculas, manejando los distintos filtros.
+
 function getPeliculas(req, res) {
   var sql = [];
   executeHandler(sql, res);

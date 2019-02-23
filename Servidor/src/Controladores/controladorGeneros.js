@@ -1,4 +1,4 @@
-var DB = require("../lib/conexionbd");
+var DB = require("../Lib/conexionbd");
 var QueryHandler = require("../Lib/QueryHandler");
 function getGeneros(req, res) {
   var sql = QueryHandler.defaultHandler(req);

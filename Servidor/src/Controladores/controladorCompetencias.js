@@ -1,4 +1,4 @@
-var DB = require("../lib/conexionbd");
+var DB = require("../Lib/conexionbd");
 var QueryHandler = require("../Lib/QueryHandler");
 
 function getCompetencias(req, res) {
