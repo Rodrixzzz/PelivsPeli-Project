@@ -1,17 +1,8 @@
 var selectPrincipioComp = "Select * from competencia ";
 var selectPrincipio = "Select * from ";
 var selectPeliId = "Select * from pelicula where id =  ";
-var selectCompAll =
-  "Select comp.id, comp.nombre, gen.nombre as genero_nombre,act.nombre as actor_nombre,dir.nombre as director_nombre ";
-var fromCompAll = "from competencia comp, genero gen, actor act, director dir";
-var joinCompAll =
-  " and gen.id = comp.genero_id and act.id = comp.actor_id and dir.id = comp.director_id";
-var selectCompVar = "Select comp.id, comp.nombre";
-var fromCompVar = "from competencia comp";
-var espacio = ' " "';
-var actorNombre = " as actor_nombre, ";
-var directorNombre = " as director_nombre ";
-var generoNombre = " as genero_nombre, ";
+var selectCompJoin =
+  "Select comp.id, comp.nombre, gen.nombre as genero_nombre,act.nombre as actor_nombre,dir.nombre as director_nombre from competencia comp Left JOIN genero gen ON gen.id = comp.genero_id Left JOIN actor act ON act.id = comp.actor_id Left JOIN director dir ON dir.id = comp.director_id where comp.id = ";
 var SelectCompPeli = "Select peli.id,peli.poster,peli.titulo";
 var fromCompPeli = " from pelicula peli, competencia comp";
 var fromVoto = " from pelicula peli, voto vot";
@@ -45,146 +36,7 @@ function competenciasPorNombre(req) {
 }
 //#region ComeptenciasPorCampos
 function ComeptenciasPorCamposHandler(result) {
-  var sql;
-  switch (true) {
-    case result[0].genero_id != undefined &&
-      result[0].actor_id != undefined &&
-      result[0].director_id != undefined:
-      sql =
-        selectCompAll +
-        fromCompAll +
-        " where comp.id = " +
-        result[0].id +
-        joinCompAll;
-      break;
-    case result[0].genero_id != undefined &&
-      result[0].actor_id == undefined &&
-      result[0].director_id == undefined:
-      sql =
-        selectCompVar +
-        ", gen.nombre" +
-        generoNombre +
-        espacio +
-        actorNombre +
-        espacio +
-        directorNombre +
-        fromCompVar +
-        " ,genero gen " +
-        " where comp.id = " +
-        result[0].id +
-        " and gen.id = comp.genero_id";
-      break;
-    case result[0].genero_id != undefined &&
-      result[0].actor_id != undefined &&
-      result[0].director_id == undefined:
-      sql =
-        selectCompVar +
-        ", gen.nombre" +
-        generoNombre +
-        " act.nombre" +
-        actorNombre +
-        espacio +
-        directorNombre +
-        fromCompVar +
-        " ,genero gen,actor act " +
-        " where comp.id = " +
-        result[0].id +
-        " and gen.id = comp.genero_id" +
-        " and act.id = comp.actor_id";
-      break;
-    case result[0].genero_id != undefined &&
-      result[0].actor_id == undefined &&
-      result[0].director_id != undefined:
-      sql =
-        selectCompVar +
-        ", gen.nombre" +
-        generoNombre +
-        espacio +
-        actorNombre +
-        " dir.nombre " +
-        directorNombre +
-        fromCompVar +
-        " ,genero gen,director dir " +
-        " where comp.id = " +
-        result[0].id +
-        " and gen.id = comp.genero_id" +
-        " and dir.id = comp.director_id";
-      break;
-    case result[0].genero_id == undefined &&
-      result[0].actor_id != undefined &&
-      result[0].director_id != undefined:
-      sql =
-        selectCompVar +
-        ", " +
-        espacio +
-        generoNombre +
-        " act.nombre" +
-        actorNombre +
-        " dir.nombre " +
-        directorNombre +
-        fromCompVar +
-        " ,actor act,director dir " +
-        " where comp.id = " +
-        result[0].id +
-        " and act.id = comp.actor_id" +
-        " and dir.id = comp.director_id";
-      break;
-    case result[0].genero_id == undefined &&
-      result[0].actor_id != undefined &&
-      result[0].director_id == undefined:
-      sql =
-        selectCompVar +
-        ", " +
-        espacio +
-        generoNombre +
-        " act.nombre" +
-        actorNombre +
-        espacio +
-        directorNombre +
-        fromCompVar +
-        " ,actor act " +
-        " where comp.id = " +
-        result[0].id +
-        " and act.id = comp.actor_id";
-      break;
-    case result[0].genero_id == undefined &&
-      result[0].actor_id == undefined &&
-      result[0].director_id != undefined:
-      sql =
-        selectCompVar +
-        ", " +
-        espacio +
-        generoNombre +
-        espacio +
-        actorNombre +
-        " dir.nombre " +
-        directorNombre +
-        fromCompVar +
-        " ,director dir " +
-        " where comp.id = " +
-        result[0].id +
-        " and dir.id = comp.director_id";
-      break;
-    case result[0].genero_id != undefined &&
-      result[0].actor_id != undefined &&
-      result[0].director_id != undefined:
-      sql =
-        selectCompVar +
-        ", gen.nombre" +
-        generoNombre +
-        " act.nombre" +
-        actorNombre +
-        " dir.nombre " +
-        directorNombre +
-        fromCompVar +
-        " ,genero gen,director dir,actor act " +
-        " where comp.id = " +
-        result[0].id +
-        " and gen.id = comp.genero_id" +
-        " and dir.id = comp.director_id" +
-        " and act.id = comp.actor_id";
-      break;
-  }
+  var sql = selectCompJoin + result[0].id;
   return sql;
 }
 //#endregion
